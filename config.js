@@ -5,6 +5,7 @@ config.debug = process.env.DEBUG || false;
 
 config.mqtt  = {};
 config.mqtt.namespace = process.env.MQTT_NAMESPACE || 'device/ELP001/19070267/metrics/inst';
+config.mqtt.namespacelasthour = process.env.MQTT_NAMESPACE_LAST_HOUR || 'device/ELP001/19070267/metrics/lasthourmax';
 config.mqtt.hostname  = process.env.MQTT_HOSTNAME  || 'localhost';
 config.mqtt.port      = process.env.MQTT_PORT      || 1883;
 
