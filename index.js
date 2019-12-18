@@ -20,19 +20,18 @@ const lastHourObs = require('./lasthour');
 const mqttClient   = mqtt.connect({host: config.mqtt.hostname, port: config.mqtt.port});
 
 // Ogni 10 minuti
-const  calcStatTimer = timer(10000, 600000); 
+const  calcStatTimer = timer(10000, 300000); 
 const mongoUri = 'mongodb://' + config.mongodb.hostname + ':' + config.mongodb.port ;
 
 
 
 mqttClient.on('connect', function () {
         console.log("Connected to mqtt broker");
-        console.log(config.mqtt.namespace);
         mqttClient.subscribe(config.mqtt.namespace, function (err) {
             if (!err) {
-                console.log("Stazione sottoscritta il vento inizia a soffiare");
+                console.log("Subscribed to weather station, wind is blowing");
               }else {
-                console.log("Impossibile connettersi il vento non soffia", err);
+                console.log("Unable to subscribe  wind isn't blowing", err);
               }
         });
 });
@@ -43,12 +42,11 @@ MongoClient.connect(mongoUri, {useUnifiedTopology: true }, function(error, clien
     if(error != null) {
         throw error;
     }
-    console.log("Connected to mongo");
+    console.log("Connected to mongo blowing db");
     const coll = client.db(config.mongodb.database).collection(config.mongodb.collection);
     
     // Store data on mongodb
     mqttClient.on('message', function (topic, message) {
-        console.log("Ricevuto messaggio!!");
         const messageObject = JSON.parse(message);
         // si potrebbero già elaborare i dati ad esempio aggiungere la tz!
         coll.insertOne(messageObject, function(error, result) {
@@ -58,12 +56,14 @@ MongoClient.connect(mongoUri, {useUnifiedTopology: true }, function(error, clien
         });
     });
     // Crea uno strem temporizzato aggiunge le statistiche per le ultime due ore
-    calcStatTimer.pipe(switchMap(() => {
-        return merge(hourlyObs(coll),lastHourObs(coll).pipe(tap((lastHourWind) => {
-            console.log("Invio", lastHourWind)
-            mqttClient.publish(config.mqtt.namespacelasthour, JSON.stringify(lastHourWind))
-        })));
-    }),
+    calcStatTimer.pipe(switchMap(() =>  merge(
+        hourlyObs(coll),
+        lastHourObs(coll)
+            .pipe(
+                tap((lastHourWind) => mqttClient.publish(config.mqtt.namespacelasthour, JSON.stringify(lastHourWind), console.log))
+            )
+        )
+    ),
     tap(data => console.log( data)
             )).subscribe(() =>{} );
     

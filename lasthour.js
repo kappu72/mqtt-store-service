@@ -8,8 +8,7 @@ const config = require('./config');
 
 module.exports = (coll) => {
     const time = date.format(date.addHours(new Date(), -1), "YYYY-MM-DDTHH:mm:ss", true);
-    const updated = date.format(new Date(), "YYYY-MM-DDTHH:mm:ss", true);
-        console.log(time, updated);
+    const updated = date.format(new Date(), "YYYY-MM-DDTHH:mm:ssZ", true);
         const aggI = coll.aggregate([
             {$match: {time: {$gte: time}}},
             {$project : { 
