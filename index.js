@@ -18,12 +18,27 @@ const hourlyObs = require('./hourly');
 const lastHourObs = require('./lasthour');
 
 const mqttClient   = mqtt.connect({host: config.mqtt.hostname, port: config.mqtt.port});
+const mqttClientPatch   = mqtt.connect({host: config.mqtt.hostname, port: config.mqtt.port});
 
 // Ogni 10 minuti
 const  calcStatTimer = timer(10000, 300000); 
 const mongoUri = 'mongodb://' + config.mongodb.hostname + ':' + config.mongodb.port ;
 
+if(config.mqtt.patch) {
+    mqttClientPatch.on('connect', function() {
+    mqttClientPatch.subscribe(config.mqtt.namespacepatch, function (err) {
+        if (!err) {
+            console.log("Subscribed to patch ");
+          }else {
+            console.log("Unable to subscribe  wind isn't blowing", err);
+          }
+    });
+    mqttClientPatch.on('message', function (topic, message) {
+        mqttClientPatch.publish(config.mqtt.namespace, message);
+    })
 
+    
+});}
 
 mqttClient.on('connect', function () {
         console.log("Connected to mqtt broker");
