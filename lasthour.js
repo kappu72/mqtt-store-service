@@ -4,7 +4,7 @@
 
 const date = require('date-and-time');
 const {Observable} = require('rxjs');
-const config = require('./config');
+
 
 module.exports = (coll) => {
     const time = date.format(date.addHours(new Date(), -1), "YYYY-MM-DDTHH:mm:ss", true);
