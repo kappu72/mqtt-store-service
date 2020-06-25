@@ -30,7 +30,7 @@ config.stations = [
     },
     { 
         id: 19090252,
-        topic: 'device/ALP001/19090252/metrics/inst',
+        topic: 'device/ELP001/19090252/metrics/inst',
         // topic_lasthour: 'device/ELP001/19090252/metrics/lasthourmax',
         collection: 'st_19090252'
     }
@@ -41,7 +41,7 @@ config.stations = [
 config.mqtt.namespacepatch = process.env.MQTT_NAMESPACE_PATCH || 'device/ALP001//metrics/inst';
 config.mqtt.namespacepathced = process.env.MQTT_NAMESPACE_PATCHED || 'device/ELP001/19070267/metrics/inst';
 
-config.mqtt.patch = process.env.MQTT_PATCH || true;
+config.mqtt.patch = process.env.MQTT_PATCH || false;
 
 
 config.mongodb = {};

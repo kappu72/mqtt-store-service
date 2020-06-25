@@ -16,6 +16,7 @@ const { take,filter ,map, scan, switchMap, tap} = require('rxjs/operators');
 const config   = require('./config');
 const hourlyObs = require('./hourly');
 const lastHourObs = require('./lasthour');
+const { connectableObservableDescriptor } = require('rxjs/internal/observable/ConnectableObservable');
 
 const mqttClient   = mqtt.connect({host: config.mqtt.hostname, port: config.mqtt.port});
 const mqttClientPatch   = mqtt.connect({host: config.mqtt.hostname, port: config.mqtt.port});
@@ -60,6 +61,7 @@ MongoClient.connect(mongoUri, {useUnifiedTopology: true }, function(error, clien
     console.log("Connected to mongo blowing db");
     
     config.stations.map(({collection, id, topic, topic_lasthour}) => {
+        console.log(id, collection, topic);
         const coll = client.db(config.mongodb.database).collection(collection);
         mqttClient.on('message', function (income_topic, message) {
             // console.log(income_topic)
