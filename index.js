@@ -78,7 +78,9 @@ MongoClient.connect(mongoUri, {useUnifiedTopology: true }, function(error, clien
             }
         })
         // Crea uno strem temporizzato aggiunge le statistiche per le ultime due ore
-        calcStatTimer
+        if(topic_lasthour)
+        {
+            calcStatTimer
             .pipe(
                 switchMap(() =>  merge(
                     hourlyObs(coll, collection),
@@ -90,6 +92,7 @@ MongoClient.connect(mongoUri, {useUnifiedTopology: true }, function(error, clien
                 ),
                 // tap(data => console.log( "timer ", topic, data))
         ).subscribe(() =>{} )
+    }
     })
     
 });

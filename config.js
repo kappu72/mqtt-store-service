@@ -27,6 +27,12 @@ config.stations = [
         topic: 'device/ALP001/19090456/metrics/inst',
         topic_lasthour: 'device/ALP001/19090456/metrics/lasthourmax',
         collection: 'st_19090456'
+    },
+    { 
+        id: 19090252,
+        topic: 'device/ALP001/19090252/metrics/inst',
+        // topic_lasthour: 'device/ELP001/19090252/metrics/lasthourmax',
+        collection: 'st_19090252'
     }
 
 ];
