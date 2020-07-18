@@ -53,7 +53,7 @@ function getSum(coll, startDate, endDate, time) {
                 if (err) {
                     observer.error(err)
                 } else {
-                    const {sum, count} = results.pop();
+                    const [{sum, count} = {}] = results;
                     observer.next({sum, count});
                     observer.complete();
                 }
