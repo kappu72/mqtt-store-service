@@ -16,15 +16,17 @@ const { take,filter ,map, scan, switchMap, tap} = require('rxjs/operators');
 const config   = require('./config');
 const hourlyObs = require('./hourly');
 const lastHourObs = require('./lasthour');
-const { connectableObservableDescriptor } = require('rxjs/internal/observable/ConnectableObservable');
+const aggregateRain = require('./aggregateHydroData');
+
 
 const mqttClient   = mqtt.connect({host: config.mqtt.hostname, port: config.mqtt.port});
 const mqttClientPatch   = mqtt.connect({host: config.mqtt.hostname, port: config.mqtt.port});
 
-// Ogni 50 minuti
-const  calcStatTimer = timer(10000, 30000); 
-const mongoUri = 'mongodb://' + config.mongodb.hostname + ':' + config.mongodb.port ;
 
+const  calcStatTimer = timer(10000, 30000); 
+const rainTimer = timer(10, 60000); // Aggiorna ogni  minuto
+const mongoUri = 'mongodb://' + config.mongodb.hostname + ':' + config.mongodb.port ;
+console.log(mongoUri);
 if(config.mqtt.patch) {
     mqttClientPatch.on('connect', function() {
     mqttClientPatch.subscribe(config.mqtt.namespacepatch, function (err) {
@@ -60,7 +62,7 @@ MongoClient.connect(mongoUri, {useUnifiedTopology: true }, function(error, clien
     }
     console.log("Connected to mongo blowing db");
     
-    config.stations.map(({collection, id, topic, topic_lasthour}) => {
+    config.stations.map(({collection, id, topic, topic_lasthour, topic_rainSum}) => {
         console.log(id, collection, topic);
         const coll = client.db(config.mongodb.database).collection(collection);
         mqttClient.on('message', function (income_topic, message) {
@@ -94,7 +96,16 @@ MongoClient.connect(mongoUri, {useUnifiedTopology: true }, function(error, clien
                 ),
                 // tap(data => console.log( "timer ", topic, data))
         ).subscribe(() =>{} )
-    }
+        }
+        if(topic_rainSum){
+            rainTimer
+            .pipe(
+                //tap(() => console.log("Timer emit")),
+                switchMap(() =>  aggregateRain(coll).pipe(tap((rainAgg) => mqttClient.publish(topic_rainSum, JSON.stringify(rainAgg), console.log)))
+                )
+                //,tap(data => console.log( "rain ", topic_rainSum, data))
+            ).subscribe(() =>{} )
+        }
     })
     
 });

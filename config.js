@@ -31,8 +31,9 @@ config.stations = [
     { 
         id: 19090252,
         topic: 'device/ELP001/19090252/metrics/inst',
-        // topic_lasthour: 'device/ELP001/19090252/metrics/lasthourmax',
-        collection: 'st_19090252'
+        topic_rainSum: 'device/ELP001/19090252/metrics/rainagg',
+        collection: 'st_19090252',
+        
     }
 
 ];
