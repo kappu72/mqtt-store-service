@@ -24,7 +24,7 @@ const mqttClientPatch   = mqtt.connect({host: config.mqtt.hostname, port: config
 
 
 const  calcStatTimer = timer(10000, 30000); 
-const rainTimer = timer(10, 60000); // Aggiorna ogni  minuto
+const rainTimer = timer(10, 10000); // Aggiorna ogni  minuto
 const mongoUri = 'mongodb://' + config.mongodb.hostname + ':' + config.mongodb.port ;
 console.log(mongoUri);
 if(config.mqtt.patch) {
@@ -103,7 +103,7 @@ MongoClient.connect(mongoUri, {useUnifiedTopology: true }, function(error, clien
                 //tap(() => console.log("Timer emit")),
                 switchMap(() =>  aggregateRain(coll).pipe(tap((rainAgg) => mqttClient.publish(topic_rainSum, JSON.stringify(rainAgg), console.log)))
                 )
-                //,tap(data => console.log( "rain ", topic_rainSum, data))
+                ,tap(data => console.log( "rain ", topic_rainSum, data))
             ).subscribe(() =>{} )
         }
     })

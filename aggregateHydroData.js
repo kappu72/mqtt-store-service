@@ -2,40 +2,36 @@ const MongoClient  = require('mongodb').MongoClient;
 const config   = require('./config');
 const mongoUri = 'mongodb://' + config.mongodb.hostname + ':' + config.mongodb.port;
 const {merge, concat, timer, Observable} = require('rxjs');
-const { take,filter ,map, scan, bufferCount, tap, pipe} = require('rxjs/operators');
+const { map, bufferCount, tap, pipe} = require('rxjs/operators');
 const date = require('date-and-time');
 
-
-
+// ATTENZIONE ALLA TZ problema con il fatto che la stazione è in ora solare !! da sistemare
+// i logger dovrebbero mandare i dati in UTC con la timezone settata invece qui è sempre un macello
 function getDailySum (coll) {
-    // ATTENZIONE ALLA TZ
+    
     const time1 = date.format(date.addDays(new Date(), 1), "YYYY-MM-DD", true);
     const time = date.format(new Date(), "YYYY-MM-DD", true);
-    return getSum(coll, time, time1)
+    return getSum(coll, time, time1).pipe(map(res => ({res, type: "h24", updated: time})))
 }
 function getLast60Sum (coll) {
-    // ATTENZIONE ALLA TZ
-    const time1 = date.format(date.addHours(new Date, 1), "YYYY-MM-DDTHH:00:00Z", true);
-    const time =  date.format(new Date, "YYYY-MM-DDTHH:00:00Z", true);
-    return getSum(coll, time, time1)
+    const time = date.format(date.addHours(new Date(), -1), "YYYY-MM-DDTHH:00:00Z", true);
+    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:00:00Z", true);
+    return getSum(coll, time, time1).pipe(map(res => ({res, type: "h1", updated: time1})))
 }
 function getLast30Sum (coll) {
-    // ATTENZIONE ALLA TZ
-    const time1 = date.format(date.addMinutes(new Date, 30), "YYYY-MM-DDTHH:mm:00Z", true);
-    const time =  date.format(new Date, "YYYY-MM-DDTHH:mm:00Z", true);
-    return getSum(coll, time, time1)
+    const time = date.format(date.addMinutes(new Date(), -30), "YYYY-MM-DDTHH:mm:00Z", true);
+    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:00Z", true);
+    return getSum(coll, time, time1).pipe(map(res => ({res, type: "m30", updated: time1})))
 }
 function getLast10Sum (coll) {
-    // ATTENZIONE ALLA TZ
-    const time1 = date.format(date.addMinutes(new Date, 10), "YYYY-MM-DDTHH:mm:00Z", true);
-    const time =  date.format(new Date, "YYYY-MM-DDTHH:mm:00Z", true);
-    return getSum(coll, time, time1)
+    const time = date.format(date.addMinutes(new Date(), -10), "YYYY-MM-DDTHH:mm:00Z", true);
+    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:00Z", true);
+    return getSum(coll, time, time1).pipe(map(res => ({res, type: "m10", updated: time1})))
 }
 function getLast5Sum (coll) {
-    // ATTENZIONE ALLA TZ
-    const time1 = date.format(date.addMinutes(new Date, 5), "YYYY-MM-DDTHH:mm:00Z", true);
-    const time =  date.format(new Date, "YYYY-MM-DDTHH:mm:00Z", true);
-    return getSum(coll, time, time1)
+    const time = date.format(date.addMinutes(new Date(), -5), "YYYY-MM-DDTHH:mm:00Z", true);
+    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:00Z", true);
+    return getSum(coll, time, time1).pipe(map(res => ({res, type: "m5", updated: time1})))
 }
 /**
  * 
@@ -43,10 +39,10 @@ function getLast5Sum (coll) {
  * @param {*} startDate >= date requested
  * @param {*} endDate < date requested
  */
-function getSum(coll, startDate, endDate) {
+function getSum(coll, startDate, endDate, time) {
     return new Observable((observer) => {
         const cur = coll.aggregate([
-            {$match: {$and: [{time:{ $gte:  startDate}}, {time:{ $lt:  endDate}}]}},
+            {$match: {$and: [{time:{ $gte:  startDate}}, {time:{ $lte:  endDate}}]}},
             {$group: {_id: null, sum: {$sum: {$arrayElemAt: [ "$inst", 4 ]}}, count: {$sum: 1}}},
             {$limit: 1}
         ])
@@ -57,7 +53,8 @@ function getSum(coll, startDate, endDate) {
                 if (err) {
                     observer.error(err)
                 } else {
-                    observer.next(results);
+                    const {sum, count} = results.pop();
+                    observer.next({sum, count});
                     observer.complete();
                 }
             });
