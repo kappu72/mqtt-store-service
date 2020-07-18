@@ -15,7 +15,7 @@ function getDailySum (coll) {
 }
 function getLast60Sum (coll) {
     const time = date.format(date.addHours(new Date(), -1), "YYYY-MM-DDTHH:mm:00Z", true);
-    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:00:00Z", true);
+    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:00Z", true);
     return getSum(coll, time, time1).pipe(map(res => ({res, type: "h1", time: time1})))
 }
 function getLast30Sum (coll) {
