@@ -34,6 +34,13 @@ config.stations = [
         topic_rainSum: 'device/ELP001/19090252/metrics/rainagg',
         collection: 'st_19090252',
         
+    },
+    { 
+        id: 20030132,
+        topic: 'device/ELP001/20030132/metrics/inst',
+        topic_rainSum: 'device/ELP001/20030132/metrics/rainagg',
+        collection: 'st_20030132',
+        
     }
 
 ];
