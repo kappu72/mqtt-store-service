@@ -70,7 +70,7 @@ function getSum(coll, startDate, endDate, time) {
 
 module.exports = function getRainSum(coll) {
     const updated = new Date();
-    const time = date.format(time, "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time = date.format(updated, "YYYY-MM-DDTHH:mm:ssZ", true);
     return concat( getFiveDaysSum(coll, updated), getDailySum(coll, updated), getLast60Sum(coll, updated), getLast30Sum(coll, updated), getLast10Sum(coll, updated), getLast5Sum(coll, updated)).pipe(bufferCount(6), map(stats => ({stats, time})))
 
 }
