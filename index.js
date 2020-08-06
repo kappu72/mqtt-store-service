@@ -23,8 +23,9 @@ const mqttClient   = mqtt.connect({host: config.mqtt.hostname, port: config.mqtt
 const mqttClientPatch   = mqtt.connect({host: config.mqtt.hostname, port: config.mqtt.port});
 
 
-const  calcStatTimer = timer(10000, 30000); 
-const rainTimer = timer(10, 60000); // Aggiorna ogni  minuto
+const  calcStatTimer = timer(100, config.timers.stats); 
+const rainTimer = timer(100, config.timers.rain);
+
 const mongoUri = 'mongodb://' + config.mongodb.hostname + ':' + config.mongodb.port ;
 console.log(mongoUri);
 if(config.mqtt.patch) {
