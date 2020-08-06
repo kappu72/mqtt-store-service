@@ -8,8 +8,8 @@ const date = require('date-and-time');
 // ATTENZIONE ALLA TZ problema con il fatto che la stazione è in ora solare !! da sistemare
 // i logger dovrebbero mandare i dati in UTC con la timezone settata invece qui è sempre un macello
 function getFiveDaysSum (coll, updated) {
-    const time = date.format(date.addDays(updated, -5), "YYYY-MM-DD", true);
-    const time1 = date.format(updated, "YYYY-MM-DD", true);
+    const time = date.format(date.addDays(updated, -5), "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time1 = date.format(updated, "YYYY-MM-DDTHH:mm:ssZ", true);
     return getSum(coll, time, time1).pipe(map(res => ({res, type: "d5"})))
 }
 function getDailySum (coll, updated) {
