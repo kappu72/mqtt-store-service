@@ -13,8 +13,8 @@ function getFiveDaysSum (coll, updated) {
     return getSum(coll, time, time1).pipe(map(res => ({res, type: "d5"})))
 }
 function getDailySum (coll, updated) {
-    const time1 = date.format(date.addDays(updated, 1), "YYYY-MM-DD", true);
-    const time = date.format(updated, "YYYY-MM-DD", true);
+    const time = date.format(date.addDays(updated, -1), "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time1 = date.format(updated, "YYYY-MM-DDTHH:mm:ssZ", true);
     return getSum(coll, time, time1).pipe(map(res => ({res, type: "h24"})))
 }
 function getLast60Sum (coll, updated) {
@@ -23,19 +23,24 @@ function getLast60Sum (coll, updated) {
     return getSum(coll, time, time1).pipe(map(res => ({res, type: "h1"})))
 }
 function getLast30Sum (coll, updated) {
-    const time = date.format(date.addMinutes(new Date(), -30), "YYYY-MM-DDTHH:mm:00Z", true);
-    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:00Z", true);
+    const time = date.format(date.addMinutes(new Date(), -30), "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:ssZ", true);
     return getSum(coll, time, time1).pipe(map(res => ({res, type: "m30"})))
 }
 function getLast10Sum (coll, updated) {
-    const time = date.format(date.addMinutes(new Date(), -10), "YYYY-MM-DDTHH:mm:00Z", true);
-    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:00Z", true);
+    const time = date.format(date.addMinutes(new Date(), -10), "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:ssZ", true);
     return getSum(coll, time, time1).pipe(map(res => ({res, type: "m10"})))
 }
 function getLast5Sum (coll, updated) {
-    const time = date.format(date.addMinutes(new Date(), -5), "YYYY-MM-DDTHH:mm:00Z", true);
-    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:00Z", true);
+    const time = date.format(date.addMinutes(new Date(), -5), "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:ssZ", true);
     return getSum(coll, time, time1).pipe(map(res => ({res, type: "m5"})))
+}
+function getLast1Sum (coll, updated) {
+    const time = date.format(date.addMinutes(new Date(), -1), "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:ssZ", true);
+    return getSum(coll, time, time1).pipe(map(res => ({res, type: "m1"})))
 }
 /**
  * 
@@ -71,7 +76,7 @@ function getSum(coll, startDate, endDate, time) {
 module.exports = function getRainSum(coll) {
     const updated = new Date();
     const time = date.format(updated, "YYYY-MM-DDTHH:mm:ssZ", true);
-    return concat( getFiveDaysSum(coll, updated), getDailySum(coll, updated), getLast60Sum(coll, updated), getLast30Sum(coll, updated), getLast10Sum(coll, updated), getLast5Sum(coll, updated)).pipe(bufferCount(6), map(stats => ({stats, time})))
+    return concat( getFiveDaysSum(coll, updated), getDailySum(coll, updated), getLast60Sum(coll, updated), getLast30Sum(coll, updated), getLast10Sum(coll, updated), getLast5Sum(coll, updated), getLast1Sum(coll, updated)).pipe(bufferCount(7), map(stats => ({stats, time})))
 
 }
 
