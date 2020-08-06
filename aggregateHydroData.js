@@ -7,31 +7,35 @@ const date = require('date-and-time');
 
 // ATTENZIONE ALLA TZ problema con il fatto che la stazione è in ora solare !! da sistemare
 // i logger dovrebbero mandare i dati in UTC con la timezone settata invece qui è sempre un macello
-function getDailySum (coll) {
-    
-    const time1 = date.format(date.addDays(new Date(), 1), "YYYY-MM-DD", true);
-    const time = date.format(new Date(), "YYYY-MM-DD", true);
-    return getSum(coll, time, time1).pipe(map(res => ({res, type: "h24", time: time})))
+function getFiveDaysSum (coll, updated) {
+    const time = date.format(date.addDays(updated, -5), "YYYY-MM-DD", true);
+    const time1 = date.format(updated, "YYYY-MM-DD", true);
+    return getSum(coll, time, time1).pipe(map(res => ({res, type: "d5"})))
 }
-function getLast60Sum (coll) {
-    const time = date.format(date.addHours(new Date(), -1), "YYYY-MM-DDTHH:mm:00Z", true);
-    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:00Z", true);
-    return getSum(coll, time, time1).pipe(map(res => ({res, type: "h1", time: time1})))
+function getDailySum (coll, updated) {
+    const time1 = date.format(date.addDays(updated, 1), "YYYY-MM-DD", true);
+    const time = date.format(updated, "YYYY-MM-DD", true);
+    return getSum(coll, time, time1).pipe(map(res => ({res, type: "h24"})))
 }
-function getLast30Sum (coll) {
+function getLast60Sum (coll, updated) {
+    const time = date.format(date.addHours(new Date(), -1), "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:ssZ", true);
+    return getSum(coll, time, time1).pipe(map(res => ({res, type: "h1"})))
+}
+function getLast30Sum (coll, updated) {
     const time = date.format(date.addMinutes(new Date(), -30), "YYYY-MM-DDTHH:mm:00Z", true);
     const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:00Z", true);
-    return getSum(coll, time, time1).pipe(map(res => ({res, type: "m30", time: time1})))
+    return getSum(coll, time, time1).pipe(map(res => ({res, type: "m30"})))
 }
-function getLast10Sum (coll) {
+function getLast10Sum (coll, updated) {
     const time = date.format(date.addMinutes(new Date(), -10), "YYYY-MM-DDTHH:mm:00Z", true);
     const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:00Z", true);
-    return getSum(coll, time, time1).pipe(map(res => ({res, type: "m10", time: time1})))
+    return getSum(coll, time, time1).pipe(map(res => ({res, type: "m10"})))
 }
-function getLast5Sum (coll) {
+function getLast5Sum (coll, updated) {
     const time = date.format(date.addMinutes(new Date(), -5), "YYYY-MM-DDTHH:mm:00Z", true);
     const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:00Z", true);
-    return getSum(coll, time, time1).pipe(map(res => ({res, type: "m5", time: time1})))
+    return getSum(coll, time, time1).pipe(map(res => ({res, type: "m5"})))
 }
 /**
  * 
@@ -65,7 +69,9 @@ function getSum(coll, startDate, endDate, time) {
 
 
 module.exports = function getRainSum(coll) {
-    return concat( getDailySum(coll), getLast60Sum(coll), getLast30Sum(coll), getLast10Sum(coll), getLast5Sum(coll)).pipe(bufferCount(5))
+    const updated = new Date();
+    const time = date.format(time, "YYYY-MM-DDTHH:mm:ssZ", true);
+    return concat( getFiveDaysSum(coll, updated), getDailySum(coll, updated), getLast60Sum(coll, updated), getLast30Sum(coll, updated), getLast10Sum(coll, updated), getLast5Sum(coll, updated)).pipe(bufferCount(6), map(stats => ({stats, time})))
 
 }
 

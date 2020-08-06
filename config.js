@@ -45,7 +45,8 @@ config.stations = [
 
 ];
 
-config.timers = {rain: 30000, stats: 30000};
+config.timers = {rain: 15000, stats: 30000};
+
 config.mqtt.namespacepatch = process.env.MQTT_NAMESPACE_PATCH || 'device/ALP001//metrics/inst';
 config.mqtt.namespacepathced = process.env.MQTT_NAMESPACE_PATCHED || 'device/ELP001/19070267/metrics/inst';
 
