@@ -82,7 +82,7 @@ MongoClient.connect(mongoUri, {useUnifiedTopology: true }, function(error, clien
                  });
             }
         })
-        // Crea uno strem temporizzato aggiunge le statistiche per le ultime due ore
+        // Crea uno stream temporizzato aggiunge le statistiche per le ultime due ore
         if(topic_lasthour)
         {
             calcStatTimer

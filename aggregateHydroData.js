@@ -18,28 +18,28 @@ function getDailySum (coll, updated) {
     return getSum(coll, time, time1).pipe(map(res => ({res, type: "h24"})))
 }
 function getLast60Sum (coll, updated) {
-    const time = date.format(date.addHours(new Date(), -1), "YYYY-MM-DDTHH:mm:ssZ", true);
-    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time = date.format(date.addHours(updated, -1), "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time1 =  date.format(updated, "YYYY-MM-DDTHH:mm:ssZ", true);
     return getSum(coll, time, time1).pipe(map(res => ({res, type: "h1"})))
 }
 function getLast30Sum (coll, updated) {
-    const time = date.format(date.addMinutes(new Date(), -30), "YYYY-MM-DDTHH:mm:ssZ", true);
-    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time = date.format(date.addMinutes(updated, -30), "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time1 =  date.format(updated, "YYYY-MM-DDTHH:mm:ssZ", true);
     return getSum(coll, time, time1).pipe(map(res => ({res, type: "m30"})))
 }
 function getLast10Sum (coll, updated) {
-    const time = date.format(date.addMinutes(new Date(), -10), "YYYY-MM-DDTHH:mm:ssZ", true);
-    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time = date.format(date.addMinutes(updated, -10), "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time1 =  date.format(updated, "YYYY-MM-DDTHH:mm:ssZ", true);
     return getSum(coll, time, time1).pipe(map(res => ({res, type: "m10"})))
 }
 function getLast5Sum (coll, updated) {
-    const time = date.format(date.addMinutes(new Date(), -5), "YYYY-MM-DDTHH:mm:ssZ", true);
-    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time = date.format(date.addMinutes(updated, -5), "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time1 =  date.format(updated, "YYYY-MM-DDTHH:mm:ssZ", true);
     return getSum(coll, time, time1).pipe(map(res => ({res, type: "m5"})))
 }
 function getLast1Sum (coll, updated) {
-    const time = date.format(date.addMinutes(new Date(), -1), "YYYY-MM-DDTHH:mm:ssZ", true);
-    const time1 =  date.format(new Date, "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time = date.format(date.addMinutes(updated, -1), "YYYY-MM-DDTHH:mm:ssZ", true);
+    const time1 =  date.format(updated, "YYYY-MM-DDTHH:mm:ssZ", true);
     return getSum(coll, time, time1).pipe(map(res => ({res, type: "m1"})))
 }
 /**
@@ -48,7 +48,7 @@ function getLast1Sum (coll, updated) {
  * @param {*} startDate >= date requested
  * @param {*} endDate < date requested
  */
-function getSum(coll, startDate, endDate, time) {
+function getSum(coll, startDate, endDate) {
     return new Observable((observer) => {
         const cur = coll.aggregate([
             {$match: {$and: [{time:{ $gte:  startDate}}, {time:{ $lte:  endDate}}]}},
@@ -79,14 +79,3 @@ module.exports = function getRainSum(coll) {
     return concat( getFiveDaysSum(coll, updated), getDailySum(coll, updated), getLast60Sum(coll, updated), getLast30Sum(coll, updated), getLast10Sum(coll, updated), getLast5Sum(coll, updated), getLast1Sum(coll, updated)).pipe(bufferCount(7), map(stats => ({stats, time})))
 
 }
-
-
-// MongoClient.connect(mongoUri, {useUnifiedTopology: true }, function(error, client) {
-//     if(error != null) {
-//         throw error;
-//     }
-//     console.log("Connected to mongo blowing db");
-//     const coll = client.db(config.mongodb.database).collection("st_19090252");
-    
-//     getRainSum(coll).subscribe((r) => console.log(r));
-// });
