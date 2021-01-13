@@ -4,14 +4,17 @@
   "description": "Service to store mqtt message on local mongodb instance and elaborate station stat.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nohup node index.js |bunyan & ",
+    "start:statistics": "nohup node statistics.js |bunyan & "
   },
   "author": "kappu72@gmail.com",
   "license": "ISC",
   "dependencies": {
     "date-and-time": "^0.11.1",
     "mongodb": "^3.4.0",
-    "mqtt": "^3.0.0",
+    "mqtt": "4.2.6",
     "rxjs": "^6.5.3"
   }
+  
 }

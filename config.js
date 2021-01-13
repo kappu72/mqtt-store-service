@@ -20,34 +20,51 @@ config.stations = [
         id: 19070267,
         topic: 'device/ALP001/19070267/metrics/inst',
         topic_lasthour: 'device/ALP001/19070267/metrics/lasthourmax',
-        collection: 'st_19070267'
+        collection: 'st_19070267',
+        type: 'vento'
     },
     { 
         id: 19090456,
         topic: 'device/ALP001/19090456/metrics/inst',
         topic_lasthour: 'device/ALP001/19090456/metrics/lasthourmax',
-        collection: 'st_19090456'
+        collection: 'st_19090456',
+        type: 'vento'
     },
     { 
         id: 19090252,
         topic: 'device/ELP001/19090252/metrics/inst',
         topic_rainSum: 'device/ELP001/19090252/metrics/rainagg',
         collection: 'st_19090252',
-        
+        type: 'pioggia'
     },
     { 
         id: 20030132,
         topic: 'device/ELP001/20030132/metrics/inst',
         topic_rainSum: 'device/ELP001/20030132/metrics/rainagg',
         collection: 'st_20030132',
-        
+        type: 'pioggia'
     },
     { 
         id: 19100250,
         topic: 'device/ALP001/19100250/metrics/inst',
         topic_lasthour: 'device/ALP001/19100250/metrics/lasthourmax',
-        collection: 'st_19100250'
-    }
+        collection: 'st_19100250',
+        type: 'vento'
+    },{ 
+        id: 'baveno',
+        topic: 'device/TRF001/baveno/metrics/inst',
+        topic_lasthour: 'device/ALP001/19090456/metrics/lasthourmax',
+        collection: 'st_baveno',
+        type: 'idrometro'
+    },{ 
+        id: 'sml',
+        topic: 'device/TRF001/sml/metrics/inst',
+        topic_lasthour: 'device/TRF001/baveno/metrics/lasthourmax',
+        collection: 'st_sml',
+        type: 'idrometro'
+        
+    },
+
 
 ];
 
