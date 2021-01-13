@@ -53,13 +53,13 @@ config.stations = [
     },{ 
         id: 'baveno',
         topic: 'device/TRF001/baveno/metrics/inst',
-        topic_lasthour: 'device/ALP001/19090456/metrics/lasthourmax',
+        topic_lasthour: 'device/ALP001/baveno/metrics/lasthourmax',
         collection: 'st_baveno',
         type: 'idrometro'
     },{ 
         id: 'sml',
         topic: 'device/TRF001/sml/metrics/inst',
-        topic_lasthour: 'device/TRF001/baveno/metrics/lasthourmax',
+        topic_lasthour: 'device/TRF001/sml/metrics/lasthourmax',
         collection: 'st_sml',
         type: 'idrometro'
         

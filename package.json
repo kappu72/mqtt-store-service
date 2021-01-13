@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nohup node index.js |bunyan & ",
-    "start:statistics": "nohup node statistics.js |bunyan & "
+    "start-statistics": "nohup node index.js |bunyan & "
   },
   "author": "kappu72@gmail.com",
   "license": "ISC",
