@@ -63,15 +63,11 @@ config.stations = [
         collection: 'st_sml',
         type: 'idrometro'
         
-    },
-
-
+    }
 ];
 
 config.timers = {rain: 15000, stats: 30000};
 
-config.mqtt.namespacepatch = process.env.MQTT_NAMESPACE_PATCH || 'device/ALP001//metrics/inst';
-config.mqtt.namespacepathced = process.env.MQTT_NAMESPACE_PATCHED || 'device/ELP001/19070267/metrics/inst';
 
 config.mqtt.patch = process.env.MQTT_PATCH || false;
 

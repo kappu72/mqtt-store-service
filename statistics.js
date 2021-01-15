@@ -68,18 +68,16 @@ MongoClient.connect(mongoUri, {useUnifiedTopology: true }, function(error, clien
         }
         else if(type === 'idrometro' && topic_lasthour)
         {
-          calcStatTimer
+            rainTimer
           .pipe(
               switchMap(() => {
                   const now = new Date()
-                  console.log(now);
                   const startDate = date.format(now, "YYYY-MM-DDT[00:00]", true);
                   const endDate = date.format(now, "YYYY-MM-DDT[23:59]", true);
-                  console.log(startDate, endDate);
                     return idrometroMaxMin(coll, startDate, endDate)
                 }
               )
-              //ç,tap(data => console.log( "idrometro ", topic_lasthour, data))
+              ,tap(data => console.log( "idrometro ", topic_lasthour, data))
               ,tap((data) => mqttClient.publish(topic_lasthour, JSON.stringify(data), console.log))
               
           ).subscribe(() =>{} )
