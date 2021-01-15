@@ -29,20 +29,24 @@ mqttClient.on('connect', function () {
                 if(error != null) throw error;
                 console.log("Connected to mongo blowing db");
                 mqttClient.on('message', function (income_topic, message, packet) {
-                    const { collection } = ( configByTopic[income_topic] || { } );
-                    if(!collection) return;
-                    const coll = client.db(config.mongodb.database).collection(collection);
-                    const {time, inst} = JSON.parse(message);
-                    if (!time || !inst) return;
-                    const cleanTime = time.substr(0, 19) + "Z"; // viene eliminata qualsiasi tipo di informazione di TZ e riportata ad UTC, tutti i dati meteo devono essere in UTC
-                    const row = {time: cleanTime, inst};
-                    coll.insertOne(row, function(error, result) {
-                        if(error != null) {
-                            console.log("ERROR: " + error);
-                        } else if(result){
-                            console.log("inseriti", collection, result.result, packet.qos)
-                        }
-                    });
+                    try {   
+                        const { collection } = ( configByTopic[income_topic] || { } );
+                        if(!collection) return;
+                        const coll = client.db(config.mongodb.database).collection(collection);
+                        const {time, inst} = JSON.parse(message);
+                        if (!time || !inst) return;
+                        const cleanTime = time.substr(0, 19) + "Z"; // viene eliminata qualsiasi tipo di informazione di TZ e riportata ad UTC, tutti i dati meteo devono essere in UTC
+                        const row = {time: cleanTime, inst};
+                        coll.insertOne(row, function(error, result) {
+                            if(error != null) {
+                                console.log("ERROR: " + error);
+                            } else if(result){
+                        //        console.log("inseriti " + collection, cleanTime, packet.qos)
+                            }
+                        });
+                    }catch(e) {
+                        console.log("errore" + income_topic, e)
+                    }
                 })
             })
         }else {
