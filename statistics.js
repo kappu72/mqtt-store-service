@@ -93,6 +93,15 @@ MongoClient.connect(mongoUri, { useUnifiedTopology: true }, function (error, cli
                     , tap(data => console.log("rain ", topic_rainSum, data))
                 ).subscribe(() => { })
         }
+        else if (type === 'pioggia_v2' && topic_rainSum) {
+            rainTimer
+                .pipe(
+                    //tap(() => console.log("Timer emit")),
+                    switchMap(() => aggregateRain(coll, 1).pipe(tap((rainAgg) => mqttClient.publish(topic_rainSum, JSON.stringify(rainAgg), console.log)))
+                    )
+                    , tap(data => console.log("rain ", topic_rainSum, data))
+                ).subscribe(() => { })
+        }
     })
 
 });

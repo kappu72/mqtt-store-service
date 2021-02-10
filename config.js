@@ -61,9 +61,22 @@ config.stations = [
         topic: 'device/TRF001/sml/metrics/inst',
         topic_lasthour: 'device/TRF001/sml/metrics/lasthourmax',
         collection: 'st_sml',
-        type: 'idrometro'
-        
-    }
+        type: 'idrometro' 
+    },
+    { 
+        id: 'cornua',
+        topic: 'device/PLUVIORETEMET/cornua/metrics/inst',
+        topic_rainSum: 'device/PLUVIORETEMET/cornua/metrics/rainagg',
+        collection: 'st_cornua',
+        type: 'pioggia_v2'
+    },
+    { 
+        id: 'fasce',
+        topic: 'device/PLUVIORETEMET/fasce/metrics/inst',
+        topic_rainSum: 'device/PLUVIORETEMET/fasce/metrics/rainagg',
+        collection: 'st_fasce',
+        type: 'pioggia_v2'
+    },
 ];
 
 config.timers = {rain: 15000, stats: 30000};
