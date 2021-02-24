@@ -77,6 +77,13 @@ config.stations = [
         collection: 'st_fasce',
         type: 'pioggia_v2'
     },
+    { 
+        id: 'nervi',
+        topic: 'device/TRF001/nervi/metrics/inst',
+        topic_lasthour: 'device/TRF001/nervi/metrics/lasthourmax',
+        collection: 'st_nervi',
+        type: 'idrometro' 
+    },
 ];
 
 config.timers = {rain: 15000, stats: 30000};
