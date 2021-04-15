@@ -6,11 +6,11 @@ config.debug = process.env.DEBUG || false;
 
 
 config.mqtt = {
-    hostname: process.env.MQTT_HOSTNAME  || '167.114.230.71',
+    hostname: process.env.MQTT_HOSTNAME  || '127.0.0.1',
     port:     process.env.MQTT_PORT      || 1883,
 }
 config.mongodb = {
-    hostname: process.env.MONGODB_HOSTNAME   || '167.114.230.71',
+    hostname: process.env.MONGODB_HOSTNAME   || '127.0.0.1',
     port:     process.env.MONGODB_PORT       || 27017,
     database: process.env.MONGODB_DATABASE   || 'blowing'
 }
@@ -84,6 +84,20 @@ config.stations = [
         collection: 'st_nervi',
         type: 'idrometro' 
     },
+    {
+        id: 'garibaldo',
+        topic: 'device/TRF001/garibaldo/metrics/inst',
+        topic_lasthour: 'device/TRF001/garibaldo/metrics/lasthourmax',
+        collection: 'st_garibaldo',
+        type: 'idrometro'
+    },
+    {
+        id: 'simile',
+        topic: 'device/TRF001/simile/metrics/inst',
+        topic_lasthour: 'device/TRF001/simile/metrics/lasthourmax',
+        collection: 'st_simile',
+        type: 'idrometro'
+    },
 ];
 
 config.timers = {rain: 15000, stats: 30000};
@@ -93,7 +107,7 @@ config.mqtt.patch = process.env.MQTT_PATCH || false;
 
 
 config.mongodb = {};
-config.mongodb.hostname   = process.env.MONGODB_HOSTNAME   || '167.114.230.71';
+config.mongodb.hostname   = process.env.MONGODB_HOSTNAME   || '127.0.0.1';
 config.mongodb.port       = process.env.MONGODB_PORT       || 27017;
 config.mongodb.database   = process.env.MONGODB_DATABASE   || 'blowing';
 
